@@ -18,12 +18,30 @@ class FileBot:
 		self.temp_memory = []
 		self.current_dir = None
 
+	def _name_v1(self, file_name):
+		name_split = file_name.split('.')
+		name_v1 = name_split[0].split(' ')[0]
+		return name_v1
+
+	def _name_v2(self, file_name):
+		name_split = file_name.split(' ')
+		if len(name_split) > 2:				
+			name_v2 = name_split[0]+' '+name_split[1]
+			return name_v2
+
 	def _change_dir(self):
 		dirx = os.getcwd()
 		arr = dirx.split('/')
 		path = '/'+arr[1]+'/'+arr[2]+'/'+ self.location
 		os.chdir(path)
 		self.current_dir = path
+
+	def _split_exe(self, file):
+		if '.' in file:
+			file_split = file.split('.')
+			name = file_split[0]
+			exe = file_split[-1:]
+			return name, exe
 
 	def _get_date(self):
 		today = date.today()
@@ -47,11 +65,14 @@ class FileBot:
 	def collect_files(self):
 		files = os.listdir()
 		for file in files:
+			# We identify the files from then folders
 			if '.' in file:
-				file_split = file.split('.')
-				file_nameX = file_split[0].split(' ')[0]
-				if self.file_exe in file_split[-1:] and file_nameX == self.file_name:
+				name, exe = self._split_exe(file)
+				name_v1 = self._name_v1(name)
+				name_v2 = self._name_v2(name)
+				if self.file_exe in exe and name_v1 == self.file_name or self.file_exe in exe and name_v2 == self.file_name:
 					self.temp_memory.append(file)
+
 	# Process 02
 	def rename_and_relocate_files(self):
 		for file in self.temp_memory:
@@ -75,6 +96,7 @@ class FileBot:
 			print("Number of Cycles: " + str(life_cycles) +"/" + str(self.iteration))
 			print("Time: " + current_time )
 			print("=========================")
+			#self.collect_files()
 			self.collect_files()
 			self.rename_and_relocate_files()
 			if life_cycles >= self.iteration:
@@ -84,7 +106,7 @@ class FileBot:
 
 
 if __name__ == "__main__":
-	screenshotBot = FileBot('ScreenShot','Desktop','Screenshot','png',1000)
+	screenshotBot = FileBot('ScreenShot','Desktop','Screen Shot','png',1000)
 	screenshotBot.startBot()
 
 

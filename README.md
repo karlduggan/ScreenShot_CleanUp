@@ -1,4 +1,4 @@
-# FileBot
+# ScreenShot_CleanUp
 ScreenShot  File Bot
 
 While inspecting websites for defects, I suppport my findings by taking screenshots. 
